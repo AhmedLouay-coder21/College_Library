@@ -19,6 +19,41 @@ class library
   }
   addBookToLibrary(title, author, yearOfPublish, numberOfPages, rate, numberOfCopies) {
     // take params, create a book then store it in the array
+    const year = Number(yearOfPublish);
+    const pages = Number(numberOfPages);
+    const rateNum = Number(rate);
+    const copies = Number(numberOfCopies);
+
+    // VALIDATION
+    if (typeof title !== "string" || !title.trim()) {
+      alert("Title must be a non-empty text.");
+      return;
+    }
+
+    if (typeof author !== "string" || !author.trim()) {
+      alert("Author must be a non-empty text.");
+      return;
+    }
+
+    if (!Number.isInteger(year) || year <= 0) {
+      alert("Year of publish must be a positive integer.");
+      return;
+    }
+
+    if (!Number.isInteger(pages) || pages <= 0) {
+      alert("Number of pages must be a positive integer.");
+      return;
+    }
+
+    if (Number.isNaN(rateNum) || rateNum < 0 || rateNum > 5) {
+      alert("Rate must be a number between 0 and 5.");
+      return;
+    }
+
+    if (!Number.isInteger(copies) || copies < 0) {
+      alert("Number of copies must be a non‑negative integer.");
+      return;
+    }
     const book = new Book(this.nextId, title, author, yearOfPublish, numberOfPages, rate, numberOfCopies);
     this.books.push(book);
     this.nextId += 1;
