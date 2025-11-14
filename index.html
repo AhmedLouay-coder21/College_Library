@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <script src="Library.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+        <table id="Books">
+        <tr id="tableHead">
+            <th id="delete"></th>
+            <th style="background-color: #4e9fe5;">ID</th>
+            <th style="background-color: aquamarine;">Title</th>
+            <th style="background-color: #4e9fe5;">Author</th>
+            <th style="background-color: aquamarine;">Year of publish</th>
+            <th style="background-color: #4e9fe5;">Number of pages</th>
+            <th style="background-color: aquamarine;">Rate</th>
+            <th style="background-color: #4e9fe5;">number Of Copies Available</th>
+        </tr>
+        </table>
+        <div id = "form">
+        <button id="newBook">add new book</button>
+        <form id = "formContent">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Oliver Twist">
+
+            <label for="author">Author</label>
+            <input type="text" id="author" name="author" placeholder="Charles Dickens">
+
+            <label for="yearOfPublish">Year of Publish</label>
+            <input type="text" id="yearOfPublish" name="yearOfPublish" placeholder="1877">
+
+            <label for="Pages#">Number of Pages</label>
+            <input type="text" id="Pages#" name="Number of Pages" placeholder="608">
+            
+            <label for="rate">Rate</label>
+            <input type="text" id="rate" name="rate" placeholder="4.00">
+            
+            <label for="numberOfCopiesForm">number Of Copies Available</label>
+            <input type="text" id="numberOfCopies" name="number Of Copies Available" placeholder="5">
+
+            <input type="submit" value="Submit">
+        </form>
+        </div>
+</body>
+</html>
