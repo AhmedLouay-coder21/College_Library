@@ -123,5 +123,256 @@ class bookDetails(BaseModel):
     available_copies: int
 ```
 ### Endpoints
+
 #### Health Check
-
+
+- **GET** `/`
+- **Description:** Check if the server is running.
+- **Response:**
+  ```json
+  {
+    "health": "OK",
+    "status": "success"
+  }
+  ```
+
+---
+
+#### Get All Books
+
+- **GET** `/books`
+- **Description:** Return all books.
+- **Response:**
+  ```json
+  {
+    "books": {
+      "1": { ... },
+      "2": { ... },
+      "3": { ... }
+    },
+    "status": "success"
+  }
+  ```
+
+---
+
+#### Get a Specific Book
+
+- **GET** `/books/{book_id}`
+- **Path Parameter:** `book_id` (int)
+- **Description:** Return a single book by ID.
+- **Success Response:**
+  ```json
+  {
+    "book": [1, { ... }],
+    "status": "success"
+  }
+  ```
+- **Error Response (404):**
+  ```json
+  {
+    "detail": "Book not found"
+  }
+  ```
+
+---
+
+#### Add a New Book
+
+- **POST** `/books/{new_id}`
+- **Body:** `bookDetails` JSON (all fields required)
+- **Note:** The path parameter `{new_id}` is not used; the server always assigns `new_id = max(books.keys()) + 1`.
+- **Request Example:**
+  ```json
+  {
+    "book_id": 10,
+    "title": "New Book Title",
+    "author": "Author Name",
+    "yearOfPublish": 2024,
+    "numberOfPages": 300,
+    "rate": 4.5,
+    "available_copies": 5
+  }
+  ```
+- **Success Response (201):**
+  ```json
+  {
+    "book": {
+      "book_id": 10,
+      "title": "New Book Title",
+      "author": "Author Name",
+      "yearOfPublish": 2024,
+      "numberOfPages": 300,
+      "rate": 4.5,
+      "available_copies": 5
+    },
+    "status": "added successfully!"
+  }
+  ```
+
+---
+
+#### Replace All Details of a Book
+
+- **PUT** `/books/{book_id}`
+- **Path Parameter:** `book_id` (int)
+- **Body:** `bookDetails` JSON (all fields required)
+- **Description:** Replace the entire book object for the given `book_id`.
+- **Response:**
+  ```json
+  {
+    "book": { ... },
+    "status": "success"
+  }
+  ```
+
+---
+
+#### Partially Update a Book
+
+- **PATCH** `/books/{book_id}`
+- **Path Parameter:** `book_id` (int)
+- **Body:** Any subset of fields defined in `partiallyBook`:
+  ```python
+  class partiallyBook(BaseModel):
+      book_id: int | None
+      title: str | None
+      author: str | None
+      yearOfPublish: int | None
+      numberOfPages: int | None
+      rate: float | None
+      available_copies: int | None
+  ```
+- **Description:** Update only the provided fields of the book.
+- **Request Example:**
+  ```json
+  {
+    "rate": 4.2,
+    "available_copies": 2
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "book": { ...updated book... },
+    "status": "updated"
+  }
+  ```
+
+---
+
+#### Borrow a Book
+
+- **PATCH** `/books/{book_id}/borrow`
+- **Path Parameter:** `book_id` (int)
+- **Description:** Decrease `available_copies` by 1.
+- **Success Response:**
+  ```json
+  {
+    "book": { ...updated book... },
+    "status": "Number of books updated"
+  }
+  ```
+- **Error Response (400):**
+  ```json
+  {
+    "detail": "No copies available to borrow"
+  }
+  ```
+
+---
+
+#### Return a Book
+
+- **PATCH** `/books/{book_id}/return`
+- **Path Parameter:** `book_id` (int)
+- **Description:** Increase `available_copies` by 1.
+- **Response:**
+  ```json
+  {
+    "book": { ...updated book... },
+    "status": "Number of books updated"
+  }
+  ```
+
+---
+
+#### Delete All Books
+
+- **DELETE** `/books`
+- **Description:** Delete all books.
+- **Note:** Currently, the implementation assigns a new local `books` variable; you may want to update it to clear the global `books` dictionary instead.
+- **Response:**
+  ```json
+  {
+    "books": {},
+    "status": "All deleted"
+  }
+  ```
+
+---
+
+#### Delete a Specific Book
+
+- **DELETE** `/books/{book_id}`
+- **Path Parameter:** `book_id` (int)
+- **Description:** Delete a book by ID.
+- **Success Response:**
+  ```json
+  {
+    "books": {
+      "...": { ...remaining books... }
+    },
+    "status": "delete"
+  }
+  ```
+- **Error Response (404):**
+  ```json
+  {
+    "detail": "book not found"
+  }
+  ```
+
+---
+
+## Frontend Behavior
+
+The frontend (`Library.js`) currently manages books in memory on the client side:
+
+- When you click **“add new book”**, a form becomes visible.
+- When you submit the form:
+  - A new `Book` object is created and added to `myLibrary.books`.
+  - The new book is rendered as a row in the table.
+- Each row includes:
+  - A delete icon to remove the book from the table and from `myLibrary.books`.
+  - A cell showing the number of copies, with:
+    - A **plus** icon to increase the number of copies.
+    - A **minus** icon to decrease the number of copies (not below 0).
+
+> At the moment, these UI changes do not synchronize with the FastAPI backend. You can enhance the project by connecting the frontend and backend via `fetch` requests.
+
+---
+
+## Examples
+
+### Example: Fetch All Books
+
+```bash
+curl http://127.0.0.1:8000/books
+```
+
+### Example: Add a New Book
+
+```bash
+   {
+    "book_id": 4,
+    "title": "Example Book",
+    "author": "Example Author",
+    "yearOfPublish": 2020,
+    "numberOfPages": 320,
+    "rate": 4.2,
+    "available_copies": 2
+  }
+```
+
+---
